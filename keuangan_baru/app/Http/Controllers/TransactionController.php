@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Transaction;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -114,14 +115,21 @@ class TransactionController extends Controller
 
         $category = $this->findCategory($user->id, (int) $validated['category_id'], $validated['tipe']);
 
-        if ($validated['tipe'] === Transaction::TIPE_PENGELUARAN) {
-            $saldoTanpaTransaksiIni = $user->saldo() + (float) $transaction->jumlah;
+        $saldoSaatIni = $user->saldo();
+        $kontribusiLama = $transaction->tipe === Transaction::TIPE_PEMASUKAN
+            ? (float) $transaction->jumlah
+            : -(float) $transaction->jumlah;
+        $saldoDasar = $saldoSaatIni - $kontribusiLama;
 
-            if ($saldoTanpaTransaksiIni < (float) $validated['jumlah']) {
-                throw ValidationException::withMessages([
-                    'jumlah' => 'Pengeluaran membuat saldo menjadi negatif. Maksimal '.rupiah($saldoTanpaTransaksiIni).'.',
-                ]);
-            }
+        $kontribusiBaru = $validated['tipe'] === Transaction::TIPE_PEMASUKAN
+            ? (float) $validated['jumlah']
+            : -(float) $validated['jumlah'];
+        $saldoBaru = $saldoDasar + $kontribusiBaru;
+
+        if ($saldoBaru < 0) {
+            throw ValidationException::withMessages([
+                'jumlah' => 'Perubahan ini membuat saldo menjadi negatif ('.rupiah($saldoBaru).'). Maksimal pengeluaran yang diizinkan adalah '.rupiah(max(0, $saldoDasar)).'.',
+            ]);
         }
 
         $transaction->update([
@@ -139,6 +147,17 @@ class TransactionController extends Controller
     public function destroy(Request $request, Transaction $transaction): RedirectResponse
     {
         $this->authorizeOwnership($request, $transaction);
+
+        $user = $request->user();
+
+        if ($transaction->tipe === Transaction::TIPE_PEMASUKAN) {
+            $saldoSetelahHapus = $user->saldo() - (float) $transaction->jumlah;
+            if ($saldoSetelahHapus < 0) {
+                return back()->withErrors([
+                    'transaksi' => 'Catatan pemasukan ini tidak bisa dihapus karena akan membuat saldo Anda menjadi negatif ('.rupiah($saldoSetelahHapus).').',
+                ]);
+            }
+        }
 
         $transaction->delete();
 
@@ -186,7 +205,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection<int, Category>
+     * @return Collection<int, Category>
      */
     private function categoriesFor(int $userId, string $tipe)
     {

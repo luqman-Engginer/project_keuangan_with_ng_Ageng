@@ -1,7 +1,7 @@
 <?php
 
-test('the application returns a successful response', function () {
+test('halaman utama mengarahkan tamu ke dashboard dan login', function () {
     $response = $this->get('/');
 
-    $response->assertStatus(200);
+    $response->assertRedirect('/dashboard');
 });

@@ -18,8 +18,11 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     public const ROLE_ADMIN = 'admin';
+
     public const ROLE_USER = 'user';
+
     public const STATUS_AKTIF = 'aktif';
+
     public const STATUS_NONAKTIF = 'nonaktif';
 
     /**

@@ -16,6 +16,7 @@ class Category extends Model
     use HasFactory;
 
     public const TIPE_PEMASUKAN = 'pemasukan';
+
     public const TIPE_PENGELUARAN = 'pengeluaran';
 
     public function user(): BelongsTo
