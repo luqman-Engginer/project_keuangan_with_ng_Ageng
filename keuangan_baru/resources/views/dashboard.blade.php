@@ -10,10 +10,9 @@
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
 
     {{-- Total Pemasukan --}}
-    <div class="stat-card" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
-        <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
-            <svg viewBox="0 0 100 100" fill="white"><circle cx="80" cy="20" r="60"/></svg>
-        </div>
+    <div class="stat-card" data-tilt data-reveal style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+        <span class="glow"></span>
+        <span class="blob"></span>
         <div class="relative">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
@@ -24,15 +23,14 @@
                 <span class="text-emerald-200 text-xs font-semibold px-2.5 py-1 bg-white/10 rounded-full">Total</span>
             </div>
             <p class="text-emerald-100 text-sm font-medium mb-1">Total Pemasukan</p>
-            <p class="text-white text-2xl font-bold">{{ rupiah($totalPemasukan) }}</p>
+            <p class="text-white text-3xl font-extrabold tracking-tight tabular-nums" data-count="{{ (int) $totalPemasukan }}">{{ rupiah($totalPemasukan) }}</p>
         </div>
     </div>
 
     {{-- Total Pengeluaran --}}
-    <div class="stat-card" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);">
-        <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
-            <svg viewBox="0 0 100 100" fill="white"><circle cx="80" cy="20" r="60"/></svg>
-        </div>
+    <div class="stat-card" data-tilt data-reveal style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);">
+        <span class="glow"></span>
+        <span class="blob"></span>
         <div class="relative">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
@@ -43,15 +41,14 @@
                 <span class="text-rose-200 text-xs font-semibold px-2.5 py-1 bg-white/10 rounded-full">Total</span>
             </div>
             <p class="text-rose-100 text-sm font-medium mb-1">Total Pengeluaran</p>
-            <p class="text-white text-2xl font-bold">{{ rupiah($totalPengeluaran) }}</p>
+            <p class="text-white text-3xl font-extrabold tracking-tight tabular-nums" data-count="{{ (int) $totalPengeluaran }}">{{ rupiah($totalPengeluaran) }}</p>
         </div>
     </div>
 
     {{-- Saldo --}}
-    <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
-        <div class="absolute top-0 right-0 w-32 h-32 opacity-10">
-            <svg viewBox="0 0 100 100" fill="white"><circle cx="80" cy="20" r="60"/></svg>
-        </div>
+    <div class="stat-card" data-tilt data-reveal style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+        <span class="glow"></span>
+        <span class="blob"></span>
         <div class="relative">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
@@ -62,36 +59,61 @@
                 <span class="text-indigo-200 text-xs font-semibold px-2.5 py-1 bg-white/10 rounded-full">Saldo</span>
             </div>
             <p class="text-indigo-100 text-sm font-medium mb-1">Saldo Saat Ini</p>
-            <p class="text-white text-2xl font-bold">{{ rupiah($saldo) }}</p>
+            <p class="text-white text-3xl font-extrabold tracking-tight tabular-nums" data-count="{{ (int) $saldo }}">{{ rupiah($saldo) }}</p>
         </div>
+    </div>
+</div>
+
+
+{{-- Rasio pemasukan vs pengeluaran --}}
+@php
+    $totalArus = max((float) $totalPemasukan + (float) $totalPengeluaran, 1);
+    $persenMasuk = round(((float) $totalPemasukan / $totalArus) * 100);
+    $persenKeluar = 100 - $persenMasuk;
+@endphp
+<div class="card mb-8 p-6" data-reveal>
+    <div class="flex items-center justify-between mb-3">
+        <div>
+            <h2 class="text-base font-extrabold">Perbandingan Arus Kas</h2>
+            <p class="text-xs mt-0.5" style="color: var(--muted)">Pemasukan vs pengeluaran dari seluruh catatan</p>
+        </div>
+        <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-500">{{ $persenMasuk }}% / {{ $persenKeluar }}%</span>
+    </div>
+    <div class="flex h-3.5 w-full overflow-hidden rounded-full" style="background: var(--border)">
+        <div class="h-full rounded-l-full bg-gradient-to-r from-emerald-400 to-teal-500 transition-all duration-[1600ms] ease-out" data-progress="{{ $persenMasuk }}"></div>
+        <div class="h-full rounded-r-full bg-gradient-to-r from-rose-400 to-pink-500 transition-all duration-[1600ms] ease-out" data-progress="{{ $persenKeluar }}"></div>
+    </div>
+    <div class="mt-3 flex justify-between text-xs font-semibold">
+        <span class="flex items-center gap-1.5 text-emerald-500"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Pemasukan</span>
+        <span class="flex items-center gap-1.5 text-rose-500">Pengeluaran<span class="h-2 w-2 rounded-full bg-rose-500"></span></span>
     </div>
 </div>
 
 {{-- Quick Actions --}}
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
     <a href="{{ route('transactions.create', ['tipe' => 'pemasukan']) }}"
-        class="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-200 group">
+        data-reveal class="flex flex-col items-center gap-2 p-4 card !rounded-2xl hover:-translate-y-1.5 hover:scale-[1.03] hover:border-emerald-200 transition-all duration-200 group">
         <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-500 transition-colors">
             <svg class="w-5 h-5 text-emerald-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
         </div>
         <span class="text-xs font-semibold text-slate-600 text-center">Tambah Pemasukan</span>
     </a>
     <a href="{{ route('transactions.create', ['tipe' => 'pengeluaran']) }}"
-        class="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-rose-200 transition-all duration-200 group">
+        data-reveal class="flex flex-col items-center gap-2 p-4 card !rounded-2xl hover:-translate-y-1.5 hover:scale-[1.03] hover:border-rose-200 transition-all duration-200 group">
         <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center group-hover:bg-rose-500 transition-colors">
             <svg class="w-5 h-5 text-rose-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
         </div>
         <span class="text-xs font-semibold text-slate-600 text-center">Tambah Pengeluaran</span>
     </a>
     <a href="{{ route('topup.create') }}"
-        class="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-200 group">
+        data-reveal class="flex flex-col items-center gap-2 p-4 card !rounded-2xl hover:-translate-y-1.5 hover:scale-[1.03] hover:border-indigo-200 transition-all duration-200 group">
         <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center group-hover:bg-indigo-500 transition-colors">
             <svg class="w-5 h-5 text-indigo-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
         </div>
         <span class="text-xs font-semibold text-slate-600 text-center">Isi Saldo</span>
     </a>
     <a href="{{ route('categories.index') }}"
-        class="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-amber-200 transition-all duration-200 group">
+        data-reveal class="flex flex-col items-center gap-2 p-4 card !rounded-2xl hover:-translate-y-1.5 hover:scale-[1.03] hover:border-amber-200 transition-all duration-200 group">
         <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center group-hover:bg-amber-500 transition-colors">
             <svg class="w-5 h-5 text-amber-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
         </div>
@@ -100,10 +122,10 @@
 </div>
 
 {{-- Recent Transactions --}}
-<div class="card">
+<div class="card" data-reveal>
     <div class="card-header">
         <div>
-            <h2 class="text-base font-bold text-slate-800">Transaksi Terbaru</h2>
+            <h2 class="text-base font-extrabold">Transaksi Terbaru</h2>
             <p class="text-xs text-slate-500 mt-0.5">10 transaksi terakhir</p>
         </div>
         <a href="{{ route('transactions.index') }}"

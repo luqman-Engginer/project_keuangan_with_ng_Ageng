@@ -4,9 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Dashboard') — {{ config('app.name') }}</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800" rel="stylesheet">
+    <script>try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-slate-100 font-sans antialiased">
+<body class="min-h-screen font-sans antialiased">
+
+    <div class="bg-aurora"></div>
+    <div id="toast-stack" class="toast-stack"></div>
 
     {{-- Sidebar Overlay (mobile) --}}
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden"></div>
@@ -14,11 +20,11 @@
     {{-- SIDEBAR --}}
     <aside id="sidebar"
         class="fixed top-0 left-0 h-full w-64 z-50 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
-        style="background: linear-gradient(160deg, #1e1b4b 0%, #312e81 40%, #3730a3 100%);">
+        style="background: linear-gradient(170deg, #0f0c29 0%, #1e1b4b 45%, #312e81 100%); box-shadow: 20px 0 60px -30px rgba(79,70,229,.6);">
 
         {{-- Logo --}}
         <div class="flex items-center gap-3 px-6 py-5 border-b border-white/10">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-lg">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/40 animate-float-slow">
                 <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -116,19 +122,25 @@
     <div class="lg:ml-64 min-h-screen flex flex-col">
 
         {{-- Top Bar --}}
-        <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 lg:px-8 py-3.5 flex items-center justify-between">
+        <header class="sticky top-0 z-30 backdrop-blur-xl px-4 lg:px-8 py-3.5 flex items-center justify-between" style="background: var(--surface); border-bottom: 1px solid var(--border);">
             <div class="flex items-center gap-4">
                 <button id="sidebar-toggle" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
                 <div>
-                    <h1 class="text-base font-bold text-slate-800 leading-none">@yield('page-title', 'Dashboard')</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">@yield('page-subtitle', config('app.name'))</p>
+                    <h1 class="text-lg font-extrabold leading-none text-gradient">@yield('page-title', 'Dashboard')</h1>
+                    <p class="text-xs mt-1" style="color: var(--muted)">@yield('page-subtitle', config('app.name'))</p>
                 </div>
             </div>
             @auth
             <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center gap-2 text-sm text-slate-600">
+                <button type="button" data-theme-toggle aria-label="Ganti tema"
+                    class="relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-12 active:scale-90"
+                    style="background: var(--surface-solid); border: 1px solid var(--border);">
+                    <svg class="w-5 h-5 text-amber-500 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-5 h-5 text-indigo-300 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+                <div class="hidden sm:flex items-center gap-2 text-sm" style="color: var(--muted)">
                     <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
                         {{ strtoupper(substr(auth()->user()->nama, 0, 1)) }}
                     </div>
@@ -143,10 +155,7 @@
 
             {{-- Alert Messages --}}
             @if (session('success'))
-                <div class="alert-success mb-5" data-auto-dismiss>
-                    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <span>{{ session('success') }}</span>
-                </div>
+                <div hidden data-flash="success" data-title="Berhasil" data-body="{{ session('success') }}"></div>
             @endif
 
             @if ($errors->any())
@@ -163,10 +172,12 @@
                 </div>
             @endif
 
-            @yield('content')
+            <div data-reveal style="--d:0ms">
+                @yield('content')
+            </div>
         </main>
 
-        <footer class="text-center text-xs text-slate-400 py-4 px-8 border-t border-slate-200">
+        <footer class="text-center text-xs py-5 px-8" style="color: var(--muted); border-top: 1px solid var(--border);">
             {{ config('app.name') }} &copy; {{ date('Y') }} &mdash; Aplikasi Pencatatan Keuangan
         </footer>
     </div>
