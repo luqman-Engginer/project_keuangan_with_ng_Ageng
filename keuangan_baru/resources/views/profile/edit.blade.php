@@ -9,9 +9,8 @@
 
     {{-- Profile Card --}}
     <div class="card mb-5">
-        <div class="p-6 flex items-center gap-5 border-b border-slate-100"
-            style="background: linear-gradient(135deg, #f0f4ff 0%, #f5f3ff 100%);">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-indigo-500/30 flex-shrink-0">
+        <div class="p-6 flex items-center gap-4 border-b border-slate-100">
+            <div class="w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-semibold text-xl shrink-0">
                 {{ strtoupper(substr($user->nama, 0, 1)) }}
             </div>
             <div>

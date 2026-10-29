@@ -9,16 +9,16 @@
 <div class="max-w-xl mx-auto">
 
     {{-- Type Selector --}}
-    <div class="flex gap-2 mb-5 p-1.5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+    <div class="flex gap-1 mb-5 p-1 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
         <a href="{{ route('transactions.create', ['tipe' => 'pemasukan']) }}"
-            class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
-                {{ $isPemasukan ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30' : 'text-slate-500 hover:text-slate-700' }}">
+            class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-colors
+                {{ $isPemasukan ? 'bg-emerald-600 text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 11l5-5m0 0l5 5m-5-5v12" /></svg>
             Pemasukan
         </a>
         <a href="{{ route('transactions.create', ['tipe' => 'pengeluaran']) }}"
-            class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
-                {{ ! $isPemasukan ? 'bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-lg shadow-rose-500/30' : 'text-slate-500 hover:text-slate-700' }}">
+            class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-colors
+                {{ ! $isPemasukan ? 'bg-rose-600 text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 13l-5 5m0 0l-5-5m5 5V6" /></svg>
             Pengeluaran
         </a>

@@ -8,15 +8,15 @@
 <div class="max-w-xl mx-auto">
 
     {{-- Info Banner --}}
-    <div class="flex items-start gap-4 p-4 mb-5 rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <div class="flex items-start gap-3.5 p-4 mb-5 rounded-xl border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10">
+        <div class="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-500/15 flex items-center justify-center shrink-0">
+            <svg class="w-[18px] h-[18px] text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
             </svg>
         </div>
         <div>
-            <p class="text-sm font-semibold text-indigo-800">Isi Saldo / Top-Up</p>
-            <p class="text-xs text-indigo-600 mt-0.5">Saldo yang Anda isi akan otomatis tercatat sebagai pemasukan dengan kategori <strong>Isi Saldo</strong>.</p>
+            <p class="text-sm font-semibold text-blue-900 dark:text-blue-200">Isi Saldo / Top-Up</p>
+            <p class="text-xs text-blue-800 dark:text-blue-300 mt-0.5 leading-relaxed">Saldo yang Anda isi akan otomatis tercatat sebagai pemasukan dengan kategori <strong>Isi Saldo</strong>.</p>
         </div>
     </div>
 

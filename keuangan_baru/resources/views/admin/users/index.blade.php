@@ -14,21 +14,21 @@
         $totalNonaktif = \App\Models\User::where('status', 'nonaktif')->count();
         $totalAdmin = \App\Models\User::where('role', 'admin')->count();
     @endphp
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Total Pengguna</p>
-        <p class="text-2xl font-bold text-slate-800">{{ \App\Models\User::count() }}</p>
+    <div class="card p-4">
+        <p class="text-xs font-medium text-slate-500 mb-1">Total Pengguna</p>
+        <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums">{{ \App\Models\User::count() }}</p>
     </div>
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-        <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-1">Akun Aktif</p>
-        <p class="text-2xl font-bold text-slate-800">{{ $totalAktif }}</p>
+    <div class="card p-4">
+        <p class="text-xs font-medium text-emerald-600 mb-1">Akun Aktif</p>
+        <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums">{{ $totalAktif }}</p>
     </div>
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-        <p class="text-xs font-semibold text-rose-600 uppercase tracking-wide mb-1">Akun Nonaktif</p>
-        <p class="text-2xl font-bold text-slate-800">{{ $totalNonaktif }}</p>
+    <div class="card p-4">
+        <p class="text-xs font-medium text-rose-600 mb-1">Akun Nonaktif</p>
+        <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums">{{ $totalNonaktif }}</p>
     </div>
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-        <p class="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-1">Admin</p>
-        <p class="text-2xl font-bold text-slate-800">{{ $totalAdmin }}</p>
+    <div class="card p-4">
+        <p class="text-xs font-medium text-amber-600 mb-1">Admin</p>
+        <p class="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums">{{ $totalAdmin }}</p>
     </div>
 </div>
 
@@ -76,7 +76,7 @@
                         <td class="text-slate-400 text-xs font-mono">{{ $user->id }}</td>
                         <td>
                             <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                <div class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 font-semibold text-sm shrink-0">
                                     {{ strtoupper(substr($user->nama, 0, 1)) }}
                                 </div>
                                 <div>
